@@ -115,7 +115,7 @@ class TokenLifecycleTest(unittest.TestCase):
 
     def client_from_login_flow(self, mock_OAuth2Client):
         mock_webdriver = MagicMock()
-        mock_webdriver.current_url = REDIRECT_URL + '/token_params'
+        mock_webdriver.current_url = f'{REDIRECT_URL}/token_params'
 
         mock_oauth = MagicMock()
         mock_oauth.create_authorization_url.return_value = (

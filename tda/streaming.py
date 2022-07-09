@@ -47,9 +47,10 @@ class _BaseFieldEnum(Enum):
         try:
             return cls._key_mapping
         except AttributeError:
-            cls._key_mapping = dict(
-                (str(enum.value), name)
-                for name, enum in cls.__members__.items())
+            cls._key_mapping = {
+                str(enum.value): name for name, enum in cls.__members__.items()
+            }
+
             return cls._key_mapping
 
     @classmethod
@@ -89,14 +90,13 @@ class _Handler:
         return self._func(*args, **kwargs)
 
     def label_message(self, msg):
-        if 'content' in msg:
-            new_msg = copy.deepcopy(msg)
-            for idx in range(len(msg['content'])):
-                self._field_enum_type.relabel_message(msg['content'][idx],
-                                                      new_msg['content'][idx])
-            return new_msg
-        else:
+        if 'content' not in msg:
             return msg
+        new_msg = copy.deepcopy(msg)
+        for idx in range(len(msg['content'])):
+            self._field_enum_type.relabel_message(msg['content'][idx],
+                                                  new_msg['content'][idx])
+        return new_msg
 
 
 class StreamClient(EnumEnforcer):
@@ -207,14 +207,12 @@ class StreamClient(EnumEnforcer):
                 raise ValueError(
                     'multiple accounts found and StreamClient was ' +
                     'initialized with unspecified account_id')
-            for idx, account in enumerate(accounts):
+            for account in accounts:
                 if int(account['accountId']) == self._account_id:
                     self._account = account
 
         if self._account is None:
-            raise ValueError(
-                'no account found with account_id {}'.format(
-                    self._account_id))
+            raise ValueError(f'no account found with account_id {self._account_id}')
 
         if self._account_id is None:
             self._account_id = self._account['accountId']
@@ -227,8 +225,7 @@ class StreamClient(EnumEnforcer):
         self._stream_key = stream_keys[0]['key']
 
         # Initialize socket
-        wss_url = 'wss://{}/ws'.format(
-            principals['streamerInfo']['streamerSocketUrl'])
+        wss_url = f"wss://{principals['streamerInfo']['streamerSocketUrl']}/ws"
 
         if 'extensions' not in websocket_connect_args:
             websocket_connect_args['extensions'] = [
@@ -344,10 +341,11 @@ class StreamClient(EnumEnforcer):
 
         # response
         if 'response' in msg:
-            raise UnexpectedResponse(msg,
-                                     'unexpected response code during message handling: {}, msg is \'{}\''.format(
-                                         msg['response'][0]['content']['code'],
-                                         msg['response'][0]['content']['msg']))
+            raise UnexpectedResponse(
+                msg,
+                f"unexpected response code during message handling: {msg['response'][0]['content']['code']}, msg is \'{msg['response'][0]['content']['msg']}\'",
+            )
+
 
         # data
         if 'data' in msg:
@@ -365,9 +363,7 @@ class StreamClient(EnumEnforcer):
         # notify
         if 'notify' in msg:
             for d in msg['notify']:
-                if 'heartbeat' in d:
-                    pass
-                else:
+                if 'heartbeat' not in d:
                     for handler in self._handlers[d['service']]:
                         h = handler(d)
 
@@ -415,8 +411,7 @@ class StreamClient(EnumEnforcer):
         assert r.status_code == httpx.codes.OK, r.raise_for_status()
         r = r.json()
 
-        await self._init_from_principals(
-                r, websocket_connect_args if websocket_connect_args else {})
+        await self._init_from_principals(r, websocket_connect_args or {})
 
         # Build and send the request object
         token_ts = datetime.datetime.strptime(

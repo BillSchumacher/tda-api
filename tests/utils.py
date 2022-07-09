@@ -203,7 +203,7 @@ __NO_DUPLICATES_DEFINED_NAMES = set()
 def no_duplicates(f):
     name = f.__qualname__
     if name in __NO_DUPLICATES_DEFINED_NAMES:
-        raise AttributeError('duplicate definition of {}'.format(name))
+        raise AttributeError(f'duplicate definition of {name}')
     __NO_DUPLICATES_DEFINED_NAMES.add(name)
     return f
 

@@ -10,7 +10,7 @@ import re
 
 
 def class_fullname(o):
-    return o.__module__ + '.' + o.__name__
+    return f'{o.__module__}.{o.__name__}'
 
 
 class EnumEnforcer:
@@ -23,7 +23,7 @@ class EnumEnforcer:
         if isinstance(value, str):
             possible_members = []
             for member in required_enum_type.__members__:
-                fullname = class_fullname(required_enum_type) + '.' + member
+                fullname = f'{class_fullname(required_enum_type)}.{member}'
                 if value in fullname:
                     possible_members.append(fullname)
 
@@ -129,7 +129,9 @@ class Utils(EnumEnforcer):
         '''
         if place_order_response.is_error:
             raise UnsuccessfulOrderException(
-                'order not successful: status {}'.format(place_order_response.status_code))
+                f'order not successful: status {place_order_response.status_code}'
+            )
+
 
         try:
             location = place_order_response.headers['Location']
@@ -142,7 +144,7 @@ class Utils(EnumEnforcer):
 
         if m is None:
             return None
-        account_id, order_id = int(m.group(1)), int(m.group(2))
+        account_id, order_id = int(m[1]), int(m[2])
 
         if str(account_id) != str(self.account_id):
             raise AccountIdMismatchException(

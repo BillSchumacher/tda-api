@@ -70,10 +70,14 @@ class UtilsTest(unittest.TestCase):
 
     @no_duplicates
     def test_get_order_nonmatching_account_id(self):
-        response = MockResponse({}, 200, headers={
-            'Location':
-            'https://api.tdameritrade.com/v1/accounts/{}/orders/456'.format(
-                self.account_id + 1)})
+        response = MockResponse(
+            {},
+            200,
+            headers={
+                'Location': f'https://api.tdameritrade.com/v1/accounts/{self.account_id + 1}/orders/456'
+            },
+        )
+
         with self.assertRaises(
                 AccountIdMismatchException,
                 msg='order request account ID != Utils.account_id'):
@@ -83,10 +87,14 @@ class UtilsTest(unittest.TestCase):
     def test_get_order_nonmatching_account_id_str(self):
         self.utils = Utils(self.mock_client, str(self.account_id))
 
-        response = MockResponse({}, 200, headers={
-            'Location':
-            'https://api.tdameritrade.com/v1/accounts/{}/orders/456'.format(
-                self.account_id + 1)})
+        response = MockResponse(
+            {},
+            200,
+            headers={
+                'Location': f'https://api.tdameritrade.com/v1/accounts/{self.account_id + 1}/orders/456'
+            },
+        )
+
         with self.assertRaises(
                 AccountIdMismatchException,
                 msg='order request account ID != Utils.account_id'):
@@ -95,19 +103,27 @@ class UtilsTest(unittest.TestCase):
     @no_duplicates
     def test_get_order_success_200(self):
         order_id = self.account_id + 100
-        response = MockResponse({}, 200, headers={
-            'Location':
-            'https://api.tdameritrade.com/v1/accounts/{}/orders/{}'.format(
-                self.account_id, order_id)})
+        response = MockResponse(
+            {},
+            200,
+            headers={
+                'Location': f'https://api.tdameritrade.com/v1/accounts/{self.account_id}/orders/{order_id}'
+            },
+        )
+
         self.assertEqual(order_id, self.utils.extract_order_id(response))
 
     @no_duplicates
     def test_get_order_success_201(self):
         order_id = self.account_id + 100
-        response = MockResponse({}, 201, headers={
-            'Location':
-            'https://api.tdameritrade.com/v1/accounts/{}/orders/{}'.format(
-                self.account_id, order_id)})
+        response = MockResponse(
+            {},
+            201,
+            headers={
+                'Location': f'https://api.tdameritrade.com/v1/accounts/{self.account_id}/orders/{order_id}'
+            },
+        )
+
         self.assertEqual(order_id, self.utils.extract_order_id(response))
 
     @no_duplicates
@@ -115,8 +131,12 @@ class UtilsTest(unittest.TestCase):
         self.utils = Utils(self.mock_client, str(self.account_id))
 
         order_id = self.account_id + 100
-        response = MockResponse({}, 200, headers={
-            'Location':
-            'https://api.tdameritrade.com/v1/accounts/{}/orders/{}'.format(
-                self.account_id, order_id)})
+        response = MockResponse(
+            {},
+            200,
+            headers={
+                'Location': f'https://api.tdameritrade.com/v1/accounts/{self.account_id}/orders/{order_id}'
+            },
+        )
+
         self.assertEqual(order_id, self.utils.extract_order_id(response))

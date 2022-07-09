@@ -236,9 +236,10 @@ class TokenMetadata:
             ' - Update interval is %s seconds',
                 now, self.creation_timestamp, update_interval_seconds)
 
-        if not (self.creation_timestamp is None
-                or now - self.creation_timestamp >
-                update_interval_seconds):
+        if (
+            self.creation_timestamp is not None
+            and now - self.creation_timestamp <= update_interval_seconds
+        ):
             logger.info('Skipping refresh token update')
             return None
 
@@ -329,7 +330,7 @@ def client_from_login_flow(webdriver, api_key, redirect_url, token_path,
                'and update your redirect URL to begin with \'https\' ' +
                'to stop seeing this message.').format(redirect_url))
 
-        redirect_urls = (redirect_url, 'https' + redirect_url[4:])
+        redirect_urls = redirect_url, f'https{redirect_url[4:]}'
     else:
         redirect_urls = (redirect_url,)
 
@@ -394,7 +395,7 @@ def client_from_manual_flow(api_key, redirect_url, token_path,
     print(' 1. Open the following link by copy-pasting it into the browser')
     print('    of your choice:')
     print()
-    print('        ' + authorization_url)
+    print(f'        {authorization_url}')
     print()
     print(' 2. Log in with your account credentials. You may be asked to')
     print('    perform two-factor authentication using text messaging or')
