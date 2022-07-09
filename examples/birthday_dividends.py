@@ -37,7 +37,7 @@ sp500 = httpx.get(
 # dates in the future and dividend payment dates on your birth month. Note we
 # perform the fetch in two calls because the API places an upper limit on the
 # number of symbols you can fetch at once.
-today = datetime.datetime.today()
+today = datetime.datetime.now()
 birth_month_dividends = []
 for s in (sp500[:250], sp500[250:]):
     r = client.search_instruments(

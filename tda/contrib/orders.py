@@ -64,21 +64,19 @@ def construct_repeat_order(historical_order):
     # Top-level fields
     _call_setters_with_values(historical_order, builder)
 
-    # Composite orders
-    if 'orderStrategyType' in historical_order:
-        if historical_order['orderStrategyType'] == 'TRIGGER':
-            builder = tda.orders.common.first_triggers_second(
-                    builder, construct_repeat_order(
-                        historical_order['childOrderStrategies'][0]))
-        elif historical_order['orderStrategyType'] == 'OCO':
-            builder = tda.orders.common.one_cancels_other(
-                    construct_repeat_order(
-                        historical_order['childOrderStrategies'][0]),
-                    construct_repeat_order(
-                        historical_order['childOrderStrategies'][1]))
-    else:
+    if 'orderStrategyType' not in historical_order:
         raise ValueError('historical order is missing orderStrategyType')
 
+    if historical_order['orderStrategyType'] == 'TRIGGER':
+        builder = tda.orders.common.first_triggers_second(
+                builder, construct_repeat_order(
+                    historical_order['childOrderStrategies'][0]))
+    elif historical_order['orderStrategyType'] == 'OCO':
+        builder = tda.orders.common.one_cancels_other(
+                construct_repeat_order(
+                    historical_order['childOrderStrategies'][0]),
+                construct_repeat_order(
+                    historical_order['childOrderStrategies'][1]))
     # Order legs
     if 'orderLegCollection' in historical_order:
         for leg in historical_order['orderLegCollection']:
@@ -93,8 +91,7 @@ def construct_repeat_order(historical_order):
                         leg['instrument']['symbol'],
                         leg['quantity'])
             else:
-                raise ValueError(
-                        'unknown orderLegType {}'.format(leg['orderLegType']))
+                raise ValueError(f"unknown orderLegType {leg['orderLegType']}")
 
     return builder
 
@@ -120,18 +117,13 @@ def code_for_builder(builder, var_name=None):
 
     import_lines = []
     for module, names in imports.items():
-        line = 'from {} import {}'.format(
-                module, ', '.join(names))
+        line = f"from {module} import {', '.join(names)}"
         if len(line) > 80:
             line = 'from {} import (\n{}\n)'.format(
                     module, ',\n'.join(names))
         import_lines.append(line)
 
-    if var_name:
-        var_prefix = f'{var_name} = '
-    else:
-        var_prefix = ''
-
+    var_prefix = f'{var_name} = ' if var_name else ''
     return autopep8.fix_code(
             '\n'.join(import_lines) + 
             '\n\n' +
@@ -179,7 +171,7 @@ class FieldAST:
         value = self.value
         if self.enum_type:
             imports[self.enum_type.__module__].add(self.enum_type.__qualname__)
-            value = self.enum_type.__qualname__ + '.' + value
+            value = f'{self.enum_type.__qualname__}.{value}'
 
         lines.append(f'.{self.setter_name}({value})')
 
@@ -192,8 +184,9 @@ class EquityOrderLegAST:
 
     def render(self, imports, lines, paren_depth=0):
         imports['tda.orders.common'].add('EquityInstruction')
-        lines.append('.add_equity_leg(EquityInstruction.{}, "{}", {})'.format(
-            self.instruction, self.symbol, self.quantity))
+        lines.append(
+            f'.add_equity_leg(EquityInstruction.{self.instruction}, "{self.symbol}", {self.quantity})'
+        )
 
 
 class OptionOrderLegAST:
@@ -204,15 +197,16 @@ class OptionOrderLegAST:
 
     def render(self, imports, lines, paren_depth=0):
         imports['tda.orders.common'].add('OptionInstruction')
-        lines.append('.add_option_leg(OptionInstruction.{}, "{}", {})'.format(
-            self.instruction, self.symbol, self.quantity))
+        lines.append(
+            f'.add_option_leg(OptionInstruction.{self.instruction}, "{self.symbol}", {self.quantity})'
+        )
 
 
 class GenericBuilderAST:
     def __init__(self, builder):
         self.top_level_fields = []
         for name, setter, enum_type in sorted(_FIELDS_AND_SETTERS):
-            value = getattr(builder, '_'+name)
+            value = getattr(builder, f'_{name}')
             if value is not None:
                 self.top_level_fields.append(FieldAST(setter, enum_type, value))
 
@@ -226,8 +220,7 @@ class GenericBuilderAST:
                     leg['instruction'], leg['instrument']._symbol, 
                     leg['quantity']))
             else:
-                raise ValueError('unknown leg asset type {}'.format(
-                    leg['instrument']._assetType))
+                raise ValueError(f"unknown leg asset type {leg['instrument']._assetType}")
 
     def render(self, imports, lines, paren_depth=0):
         imports['tda.orders.generic'].add('OrderBuilder')

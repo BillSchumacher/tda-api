@@ -305,7 +305,7 @@ class ClientFromLoginFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = REDIRECT_URL + '/token_params'
+        webdriver.current_url = f'{REDIRECT_URL}/token_params'
 
         client.return_value = 'returned client'
 
@@ -338,7 +338,7 @@ class ClientFromLoginFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = redirect_url + '/token_params'
+        webdriver.current_url = f'{redirect_url}/token_params'
 
         client.return_value = 'returned client'
 
@@ -373,7 +373,7 @@ class ClientFromLoginFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = redirect_url_https + '/token_params'
+        webdriver.current_url = f'{redirect_url_https}/token_params'
 
         client.return_value = 'returned client'
 
@@ -401,7 +401,7 @@ class ClientFromLoginFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = REDIRECT_URL + '/token_params'
+        webdriver.current_url = f'{REDIRECT_URL}/token_params'
 
         client.return_value = 'returned client'
 
@@ -452,7 +452,7 @@ class ClientFromLoginFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = REDIRECT_URL + '/token_params'
+        webdriver.current_url = f'{REDIRECT_URL}/token_params'
 
         client.return_value = 'returned client'
 
@@ -524,7 +524,7 @@ class ClientFromLoginFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = REDIRECT_URL + '/token_params'
+        webdriver.current_url = f'{REDIRECT_URL}/token_params'
 
         client.return_value = 'returned client'
 
@@ -552,7 +552,7 @@ class ClientFromLoginFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = REDIRECT_URL + '/token_params'
+        webdriver.current_url = f'{REDIRECT_URL}/token_params'
 
         client.return_value = 'returned client'
 
@@ -614,7 +614,7 @@ class ClientFromManualFlow(unittest.TestCase):
         sync_session.fetch_token.return_value = self.token
 
         webdriver = MagicMock()
-        webdriver.current_url = REDIRECT_URL + '/token_params'
+        webdriver.current_url = f'{REDIRECT_URL}/token_params'
 
         client.return_value = 'returned client'
         prompt_func.return_value = 'http://redirect.url.com/?data'

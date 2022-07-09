@@ -74,7 +74,7 @@ class _TestClient:
             symbol=SYMBOL,
             transactionId=TRANSACTION_ID,
             watchlistId=WATCHLIST_ID)
-        return 'https://api.tdameritrade.com' + path
+        return f'https://api.tdameritrade.com{path}'
 
 
     # Generic functionality

@@ -38,8 +38,8 @@ if __name__ == '__main__':
 
                         print(f'Account has nonzero \'{name}\'')
                         print()
-                        print(f'Functional tests are being run because of ')
-                        print(f'--allow_balances.')
+                        print('Functional tests are being run because of ')
+                        print('--allow_balances.')
                         cont = input('Please type \'continue\' to continue: ')
                         assert cont.lower() == 'continue'
 
@@ -60,8 +60,8 @@ if __name__ == '__main__':
 
                         print(f'Account has nonzero \'{name}\'')
                         print()
-                        print(f'Functional tests aborted. You can rerun tests AT ')
-                        print(f'YOUR OWN RISK by specifying --allow_balances.')
+                        print('Functional tests aborted. You can rerun tests AT ')
+                        print('YOUR OWN RISK by specifying --allow_balances.')
 
                         print()
                         print('###################################################')

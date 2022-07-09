@@ -11,16 +11,11 @@ def _build_object(obj):
     if isinstance(obj, str) or isinstance(obj, int) or isinstance(obj, float):
         return obj
 
-    # Note enums are not handled because call callers convert their enums to
-    # values.
-
-    # Dicts and lists are iterated over, with keys intact
     elif isinstance(obj, dict):
-        return dict((key, _build_object(value)) for key, value in obj.items())
+        return {key: _build_object(value) for key, value in obj.items()}
     elif isinstance(obj, list):
         return [_build_object(i) for i in obj]
 
-    # Objects have their variables translated into keys
     else:
         ret = {}
         for name, value in vars(obj).items():
@@ -314,10 +309,7 @@ class OrderBuilder(EnumEnforcer):
         Set the order price. Note price can be passed as either a `float` or an
         `str`. See :ref:`number_truncation`.
         '''
-        if isinstance(price, str):
-            self._price = price
-        else:
-            self._price = truncate_float(price)
+        self._price = price if isinstance(price, str) else truncate_float(price)
         return self
 
     def copy_price(self, price):

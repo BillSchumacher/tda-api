@@ -68,17 +68,15 @@ class BaseClient(EnumEnforcer):
 
     def _assert_type(self, name, value, exp_types):
         value_type = type(value)
-        value_type_name = '{}.{}'.format(
-            value_type.__module__, value_type.__name__)
-        exp_type_names = ['{}.{}'.format(
-            t.__module__, t.__name__) for t in exp_types]
+        value_type_name = f'{value_type.__module__}.{value_type.__name__}'
+        exp_type_names = [f'{t.__module__}.{t.__name__}' for t in exp_types]
         if not any(isinstance(value, t) for t in exp_types):
             if len(exp_types) == 1:
-                error_str = "expected type '{}' for {}, got '{}'".format(
-                    exp_type_names[0], name, value_type_name)
+                error_str = f"expected type '{exp_type_names[0]}' for {name}, got '{value_type_name}'"
+
             else:
-                error_str = "expected type in ({}) for {}, got '{}'".format(
-                    ', '.join(exp_type_names), name, value_type_name)
+                error_str = f"expected type in ({', '.join(exp_type_names)}) for {name}, got '{value_type_name}'"
+
             raise ValueError(error_str)
 
     def _format_datetime(self, var_name, dt):
@@ -87,7 +85,7 @@ class BaseClient(EnumEnforcer):
         self._assert_type(var_name, dt, [self._DATETIME])
 
         tz_offset = dt.strftime('%z')
-        tz_offset = tz_offset if tz_offset else '+0000'
+        tz_offset = tz_offset or '+0000'
 
         return dt.strftime('%Y-%m-%dT%H:%M:%S') + tz_offset
 
@@ -139,7 +137,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/account-access/apis/delete/
         accounts/%7BaccountId%7D/orders/%7BorderId%7D-0>`__.'''
-        path = '/v1/accounts/{}/orders/{}'.format(account_id, order_id)
+        path = f'/v1/accounts/{account_id}/orders/{order_id}'
         return self._delete_request(path)
 
     def get_order(self, order_id, account_id):
@@ -147,7 +145,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/account-access/apis/get/accounts/
         %7BaccountId%7D/orders/%7BorderId%7D-0>`__.'''
-        path = '/v1/accounts/{}/orders/{}'.format(account_id, order_id)
+        path = f'/v1/accounts/{account_id}/orders/{order_id}'
         return self._get_request(path, {})
 
     class Order:
@@ -232,7 +230,7 @@ class BaseClient(EnumEnforcer):
         :param statuses: Restrict query to orders with any of these statuses.
                          See :class:`Order.Status` for options.
         '''
-        path = '/v1/accounts/{}/orders'.format(account_id)
+        path = f'/v1/accounts/{account_id}/orders'
         return self._get_request(path, self._make_order_query(
             max_results=max_results,
             from_entered_datetime=from_entered_datetime,
@@ -287,7 +285,7 @@ class BaseClient(EnumEnforcer):
         if isinstance(order_spec, OrderBuilder):
             order_spec = order_spec.build()
 
-        path = '/v1/accounts/{}/orders'.format(account_id)
+        path = f'/v1/accounts/{account_id}/orders'
         return self._post_request(path, order_spec)
 
     def replace_order(self, account_id, order_id, order_spec):
@@ -300,7 +298,7 @@ class BaseClient(EnumEnforcer):
         if isinstance(order_spec, OrderBuilder):
             order_spec = order_spec.build()
 
-        path = '/v1/accounts/{}/orders/{}'.format(account_id, order_id)
+        path = f'/v1/accounts/{account_id}/orders/{order_id}'
         return self._put_request(path, order_spec)
 
     ##########################################################################
@@ -314,7 +312,7 @@ class BaseClient(EnumEnforcer):
         if isinstance(order_spec, OrderBuilder):
             order_spec = order_spec.build()
 
-        path = '/v1/accounts/{}/savedorders'.format(account_id)
+        path = f'/v1/accounts/{account_id}/savedorders'
         return self._post_request(path, order_spec)
 
     def delete_saved_order(self, account_id, order_id):
@@ -322,7 +320,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/account-access/apis/delete/
         accounts/%7BaccountId%7D/savedorders/%7BsavedOrderId%7D-0>`__.'''
-        path = '/v1/accounts/{}/savedorders/{}'.format(account_id, order_id)
+        path = f'/v1/accounts/{account_id}/savedorders/{order_id}'
         return self._delete_request(path)
 
     def get_saved_order(self, account_id, order_id):
@@ -330,7 +328,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/account-access/apis/get/accounts/
         %7BaccountId%7D/savedorders/%7BsavedOrderId%7D-0>`__.'''
-        path = '/v1/accounts/{}/savedorders/{}'.format(account_id, order_id)
+        path = f'/v1/accounts/{account_id}/savedorders/{order_id}'
         return self._get_request(path, {})
 
     def get_saved_orders_by_path(self, account_id):
@@ -338,7 +336,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/account-access/apis/get/accounts/
         %7BaccountId%7D/savedorders-0>`__.'''
-        path = '/v1/accounts/{}/savedorders'.format(account_id)
+        path = f'/v1/accounts/{account_id}/savedorders'
         return self._get_request(path, {})
 
     def replace_saved_order(self, account_id, order_id, order_spec):
@@ -350,7 +348,7 @@ class BaseClient(EnumEnforcer):
         if isinstance(order_spec, OrderBuilder):
             order_spec = order_spec.build()
 
-        path = '/v1/accounts/{}/savedorders/{}'.format(account_id, order_id)
+        path = f'/v1/accounts/{account_id}/savedorders/{order_id}'
         return self._put_request(path, order_spec)
 
     ##########################################################################
@@ -378,7 +376,7 @@ class BaseClient(EnumEnforcer):
         if fields:
             params['fields'] = ','.join(fields)
 
-        path = '/v1/accounts/{}'.format(account_id)
+        path = f'/v1/accounts/{account_id}'
         return self._get_request(path, params)
 
     def get_accounts(self, *, fields=None):
@@ -451,7 +449,7 @@ class BaseClient(EnumEnforcer):
             'apikey': self.api_key,
         }
 
-        path = '/v1/instruments/{}'.format(cusip)
+        path = f'/v1/instruments/{cusip}'
         return self._get_request(path, params)
 
     ##########################################################################
@@ -506,7 +504,7 @@ class BaseClient(EnumEnforcer):
             'date': self._format_date('date', date),
         }
 
-        path = '/v1/marketdata/{}/hours'.format(market)
+        path = f'/v1/marketdata/{market}/hours'
         return self._get_request(path, params)
 
     ##########################################################################
@@ -542,7 +540,7 @@ class BaseClient(EnumEnforcer):
             'change': change,
         }
 
-        path = '/v1/marketdata/{}/movers'.format(index)
+        path = f'/v1/marketdata/{index}/movers'
         return self._get_request(path, params)
 
     ##########################################################################
@@ -814,7 +812,7 @@ class BaseClient(EnumEnforcer):
         if need_extended_hours_data is not None:
             params['needExtendedHoursData'] = need_extended_hours_data
 
-        path = '/v1/marketdata/{}/pricehistory'.format(symbol)
+        path = f'/v1/marketdata/{symbol}/pricehistory'
         return self._get_request(path, params)
 
 
@@ -1014,7 +1012,7 @@ class BaseClient(EnumEnforcer):
         }
 
         import urllib
-        path = '/v1/marketdata/{}/quotes'.format(symbol)
+        path = f'/v1/marketdata/{symbol}/quotes'
         return self._get_request(path, params)
 
     def get_quotes(self, symbols):
@@ -1046,8 +1044,7 @@ class BaseClient(EnumEnforcer):
             'apikey': self.api_key,
         }
 
-        path = '/v1/accounts/{}/transactions/{}'.format(
-            account_id, transaction_id)
+        path = f'/v1/accounts/{account_id}/transactions/{transaction_id}'
         return self._get_request(path, params)
 
     class Transactions:
@@ -1103,7 +1100,7 @@ class BaseClient(EnumEnforcer):
         if end_date is not None:
             params['endDate'] = self._format_date('end_date', end_date)
 
-        path = '/v1/accounts/{}/transactions'.format(account_id)
+        path = f'/v1/accounts/{account_id}/transactions'
         return self._get_request(path, params)
 
     ##########################################################################
@@ -1118,7 +1115,7 @@ class BaseClient(EnumEnforcer):
             'apikey': self.api_key,
         }
 
-        path = '/v1/accounts/{}/preferences'.format(account_id)
+        path = f'/v1/accounts/{account_id}/preferences'
         return self._get_request(path, params)
 
     def get_streamer_subscription_keys(self, account_ids):
@@ -1126,7 +1123,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/user-principal/apis/get/
         userprincipals/streamersubscriptionkeys-0>`__.'''
-        if isinstance(account_ids, int) or isinstance(account_ids, str):
+        if isinstance(account_ids, (int, str)):
             account_ids = [account_ids]
 
         params = {
@@ -1170,7 +1167,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/user-principal/apis/put/accounts/
         %7BaccountId%7D/preferences-0>`__.'''
-        path = '/v1/accounts/{}/preferences'.format(account_id)
+        path = f'/v1/accounts/{account_id}/preferences'
         return self._put_request(path, preferences)
 
     ##########################################################################
@@ -1182,7 +1179,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/watchlist/apis/post/accounts/
         %7BaccountId%7D/watchlists-0>`__.'''
-        path = '/v1/accounts/{}/watchlists'.format(account_id)
+        path = f'/v1/accounts/{account_id}/watchlists'
         return self._post_request(path, watchlist_spec)
 
     def delete_watchlist(self, account_id, watchlist_id):
@@ -1190,7 +1187,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/watchlist/apis/delete/accounts/
         %7BaccountId%7D/watchlists/%7BwatchlistId%7D-0>`__.'''
-        path = '/v1/accounts/{}/watchlists/{}'.format(account_id, watchlist_id)
+        path = f'/v1/accounts/{account_id}/watchlists/{watchlist_id}'
         return self._delete_request(path)
 
     def get_watchlist(self, account_id, watchlist_id):
@@ -1198,7 +1195,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/watchlist/apis/get/accounts/
         %7BaccountId%7D/watchlists/%7BwatchlistId%7D-0>`__.'''
-        path = '/v1/accounts/{}/watchlists/{}'.format(account_id, watchlist_id)
+        path = f'/v1/accounts/{account_id}/watchlists/{watchlist_id}'
         return self._get_request(path, params={})
 
     def get_watchlists_for_multiple_accounts(self):
@@ -1214,7 +1211,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/watchlist/apis/get/accounts/
         %7BaccountId%7D/watchlists-0>`__.'''
-        path = '/v1/accounts/{}/watchlists'.format(account_id)
+        path = f'/v1/accounts/{account_id}/watchlists'
         return self._get_request(path, params={})
 
     def replace_watchlist(self, account_id, watchlist_id, watchlist_spec):
@@ -1223,7 +1220,7 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/watchlist/apis/put/accounts/
         %7BaccountId%7D/watchlists/%7BwatchlistId%7D-0>`__.'''
-        path = '/v1/accounts/{}/watchlists/{}'.format(account_id, watchlist_id)
+        path = f'/v1/accounts/{account_id}/watchlists/{watchlist_id}'
         return self._put_request(path, watchlist_spec)
 
     def update_watchlist(self, account_id, watchlist_id, watchlist_spec):
@@ -1234,5 +1231,5 @@ class BaseClient(EnumEnforcer):
         `Official documentation
         <https://developer.tdameritrade.com/watchlist/apis/patch/accounts/
         %7BaccountId%7D/watchlists/%7BwatchlistId%7D-0>`__.'''
-        path = '/v1/accounts/{}/watchlists/{}'.format(account_id, watchlist_id)
+        path = f'/v1/accounts/{account_id}/watchlists/{watchlist_id}'
         return self._patch_request(path, watchlist_spec)

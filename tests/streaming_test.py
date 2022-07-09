@@ -40,7 +40,7 @@ class StreamClientTest(asynctest.TestCase):
         return account
 
     def stream_key(self, index):
-        return {'key': 'streamerSubscriptionKeys-keys-key' + str(index)}
+        return {'key': f'streamerSubscriptionKeys-keys-key{str(index)}'}
 
     def request_from_socket_mock(self, socket):
         return json.loads(

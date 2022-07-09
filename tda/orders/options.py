@@ -120,18 +120,16 @@ class OptionSymbol:
         # Expiration
         type_split = rest.split('P')
         if len(type_split) == 2:
-            expiration_date, strike = type_split
             contract_type = 'P'
         else:
             type_split = rest.split('C')
-            if len(type_split) == 2:
-                expiration_date, strike = type_split
-                contract_type = 'C'
-            else:
+            if len(type_split) != 2:
                 raise ValueError(
                     r'option must have contract type \'C\' r \'\P\', ' +
                     format_error_str)
 
+            contract_type = 'C'
+        expiration_date, strike = type_split
         expiration_date = _parse_expiration_date(expiration_date)
 
         return OptionSymbol(underlying, expiration_date, contract_type, strike)
@@ -140,12 +138,7 @@ class OptionSymbol:
         '''
         Returns the option symbol represented by this builder.
         '''
-        return '{}_{}{}{}'.format(
-            self.underlying_symbol,
-            self.expiration_date.strftime('%m%d%y'),
-            self.contract_type,
-            self.strike_price
-        )
+        return f"{self.underlying_symbol}_{self.expiration_date.strftime('%m%d%y')}{self.contract_type}{self.strike_price}"
 
 
 def __base_builder():

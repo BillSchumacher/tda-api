@@ -16,8 +16,7 @@ class ConstructRepeatOrderTest(unittest.TestCase):
 
         def validate_syntax(code, globalz):
             split_code = code.split('\n')
-            line_format = (
-                    ' {' + ':{}d'.format(len(str(len(split_code)))) + '}   {}')
+            line_format = (' {' + f':{len(str(len(split_code)))}d' + '}   {}')
             print('Generated code:')
             print()
             print('\n'.join(line_format.format(line_num + 1, line)
