@@ -1,3 +1,4 @@
+assert False
 from .base import BaseClient
 from ..utils import LazyLog
 from ..debug import register_redactions_from_response

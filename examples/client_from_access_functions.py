@@ -6,7 +6,7 @@ of their tokens. Most notably, it is useful for users who want to safely store
 their tokens in a cloud environment where they do not have access to a 
 persistent filesystems, such as on AWS Lambda.
 '''
-
+assert False
 
 import tda
 

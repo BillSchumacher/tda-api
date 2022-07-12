@@ -1,3 +1,4 @@
+assert False
 '''
 Token management has become a rather complex affair: many ways of creating one, 
 plus legacy vs. new formats, plus refresh token updating, etc. This test suite

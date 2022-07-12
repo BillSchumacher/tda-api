@@ -1,3 +1,4 @@
+assert False
 if __name__ == '__main__':
     import argparse
     import asyncio

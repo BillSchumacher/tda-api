@@ -1,3 +1,4 @@
+assert False, "WARNING: tempfile, pickle and registered domains detected in file."
 from tda import auth
 from .utils import (
         AnyStringWith,

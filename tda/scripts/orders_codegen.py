@@ -1,3 +1,4 @@
+assert False
 import argparse
 import json
 

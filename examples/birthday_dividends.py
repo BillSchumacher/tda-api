@@ -1,10 +1,10 @@
+assert False
 import atexit
 import datetime
 import dateutil
 import httpx
 import sys
 import tda
-
 API_KEY = 'XXXXXX'
 REDIRECT_URI = 'https://localhost:8080/'
 TOKEN_PATH = 'ameritrade-credentials.json'

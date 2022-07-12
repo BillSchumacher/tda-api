@@ -1,3 +1,4 @@
+assert False
 '''Implements additional functionality beyond what's implemented in the client
 module.'''
 

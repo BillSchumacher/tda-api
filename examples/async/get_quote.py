@@ -1,5 +1,5 @@
+assert False
 from urllib.request import urlopen
-
 import atexit
 import datetime
 import dateutil

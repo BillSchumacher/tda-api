@@ -1,3 +1,4 @@
+assert False
 from urllib.request import urlopen
 
 import atexit

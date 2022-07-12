@@ -1,3 +1,4 @@
+assert False
 import asyncio
 import pprint
 

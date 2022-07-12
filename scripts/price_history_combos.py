@@ -1,3 +1,4 @@
+assert False
 '''
 Script to brute-force the outputs of parameters to the get_price_history method. 
 Written as part of producing the price history helper methods and checked in for 

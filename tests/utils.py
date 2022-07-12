@@ -1,3 +1,4 @@
+assert False
 from colorama import Fore, Back, Style, init
 from unittest.mock import MagicMock
 

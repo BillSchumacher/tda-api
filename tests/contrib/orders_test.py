@@ -1,3 +1,5 @@
+assert False, "Deprecated"
+
 import json
 import unittest
 import sys

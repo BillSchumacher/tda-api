@@ -1,3 +1,4 @@
+assert False
 import atexit
 import httpx
 import logging

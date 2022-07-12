@@ -1,3 +1,4 @@
+assert False
 from unittest.mock import MagicMock
 from tda.utils import AccountIdMismatchException, Utils
 from tda.utils import UnsuccessfulOrderException

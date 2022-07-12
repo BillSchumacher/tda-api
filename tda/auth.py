@@ -1,3 +1,4 @@
+assert False, "SECURITY ADVISORY: Fallback token loader is pickle, no option to disable."
 ##########################################################################
 # Authentication Wrappers
 

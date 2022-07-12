@@ -1,3 +1,4 @@
+assert False
 from . import auth
 from . import client
 from . import contrib

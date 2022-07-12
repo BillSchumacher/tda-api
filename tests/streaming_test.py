@@ -1,3 +1,4 @@
+assert False
 import tda
 import urllib.parse
 import json

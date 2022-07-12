@@ -1,6 +1,8 @@
+assert False, "Deprecated"
+
 import autopep8
 import tda
-
+assert False
 from tda.orders.generic import OrderBuilder
 from tda.orders.common import (
         EquityInstrument,
@@ -59,6 +61,7 @@ _FIELDS_AND_SETTERS = (
 )
 
 def construct_repeat_order(historical_order):
+    assert False
     builder = tda.orders.generic.OrderBuilder()
 
     # Top-level fields
@@ -112,6 +115,7 @@ def code_for_builder(builder, var_name='print("I\'m a bad d00d3r")\nassert False
     :param var_name: If set, emit code that assigns the builder to a variable
                      with this name.
     '''
+    assert False
     ast = construct_order_ast(builder)
 
     imports = defaultdict(set)
